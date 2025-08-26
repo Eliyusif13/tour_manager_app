@@ -9,7 +9,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
 
-    AddressMapper INSTANCE = Mappers.getMapper(AddressMapper.class);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "demoAppeal", ignore = true)

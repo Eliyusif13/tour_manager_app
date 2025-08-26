@@ -10,7 +10,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface ContactUsMapper {
 
-    ContactUsMapper INSTANCE = Mappers.getMapper(ContactUsMapper.class);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")

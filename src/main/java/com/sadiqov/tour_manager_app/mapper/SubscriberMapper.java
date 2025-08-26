@@ -10,7 +10,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface SubscriberMapper {
 
-    SubscriberMapper INSTANCE = Mappers.getMapper(SubscriberMapper.class);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")

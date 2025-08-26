@@ -25,6 +25,6 @@ public class Address {
     String addressRu;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "demo_appeal_id") // Bu sütun Address cədvəlində olacaq
+    @JoinColumn(name = "demo_appeal_id")
     DemoAppeal demoAppeal;
 }
