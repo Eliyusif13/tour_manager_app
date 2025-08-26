@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/demoAppeals")
+@RequestMapping("/api/demo-appeals")
 @RequiredArgsConstructor
 public class DemoAppealController {
     private final DemoAppealService demoAppealService;
 
 
-    @PostMapping("/a/b/c")
+    @PostMapping
     public ResponseEntity<Map<String, String>> createDemoAppeal(
             @Valid @RequestBody DemoAppealRequest request) {
         demoAppealService.createDemoAppeal(request);

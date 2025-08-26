@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Demo - Tour Manager App</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+<div class="container" id="main-container">
+    <div class="form-section">
+        <div class="header">
+            <h1>Book a demo</h1>
+            <p class="subtitle">Schedule your demo!</p>
+            <p class="description">Start small, scale fast - switch plans anytime as your team expands</p>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <form id="demoAppealForm" class="demo-form">
+            <div class="form-group">
+                <label for="fullName">Your Full Name</label>
+                <input type="text" id="fullName" name="fullName" placeholder="e.g. Sarah Williams" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="e.g. sarah@yourcompany.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <div class="phone-input">
+                    <div class="country-code">+994</div>
+                    <input type="tel" id="phone" name="phone" placeholder="e.g. 506469060" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="companyName">Company Name (Optional)</label>
+                <input type="text" id="companyName" name="companyName" placeholder="e.g. Horizon Travel Group">
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message (Optional)</label>
+                <textarea id="message" name="message" placeholder="Tell us how we can help you..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Send request</button>
+        </form>
+    </div>
+
+    <div class="image-section">
+        <div class="animation-container">
+            <div class="travel-animation">
+                <div class="plane"></div>
+                <div class="location-pin"></div>
+                <div class="hotel"></div>
+                <div class="car"></div>
+            </div>
+            <div class="animation-text">
+                <h2>Discover the World</h2>
+                <p>Let us handle your travel management needs</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="success-container" id="success-container" style="display: none;">
+    <div class="success-content">
+        <div class="success-icon">✓</div>
+        <h1>Thank You!</h1>
+        <p>Your demo request has been successfully submitted. Our team will contact you shortly.</p>
+        <button class="back-btn" onclick="goBack()">Submit Another Request</button>
+    </div>
+</div>
+
+<script src="../static/script.js"></script>
+</body>
+</html>
