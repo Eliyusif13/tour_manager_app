@@ -1,7 +1,7 @@
 package com.sadiqov.tour_manager_app.repository;
 
 
-import com.sadiqov.tour_manager_app.entity.Subscriber;
+import com.sadiqov.tour_manager_app.entity.home_page.Subscriber;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 public class DTORecords {
 
+    //HOME PAGE RECORDS
     public record SubscriberResponse(
             Long id,
             String email,
@@ -28,7 +29,6 @@ public class DTORecords {
     ) {
     }
 
-
     public record PhoneNumberResponse(
             Long id,
             String phoneNumber,
@@ -41,7 +41,6 @@ public class DTORecords {
             String phoneNumber
     ) {
     }
-
 
     public record AddressResponse(
             Long id,
@@ -59,7 +58,6 @@ public class DTORecords {
     ) {
     }
 
-
     public record DemoAppealRequest(
             @NotBlank(message = "Full name is required")
             String fullName,
@@ -73,7 +71,9 @@ public class DTORecords {
 
             List<PhoneNumberRequest> phoneNumbers,
             AddressRequest address
-    ) {}
+    ) {
+    }
+
     public record DemoAppealResponse(
             Long id,
             String fullName,
@@ -83,8 +83,8 @@ public class DTORecords {
             LocalDateTime createdAt,
             List<PhoneNumberResponse> phoneNumbers,
             AddressResponse address
-    ) {}
-
+    ) {
+    }
 
     public record ContactUsResponse(
             Long id,
@@ -93,7 +93,8 @@ public class DTORecords {
             String message,
             LocalDateTime createdAt,
             Boolean isResponded
-    ) {}
+    ) {
+    }
 
     public record ContactUsRequest(
             @NotBlank(message = "Name is required")
@@ -105,7 +106,8 @@ public class DTORecords {
 
             @NotBlank(message = "Message is required")
             String message
-    ) {}
+    ) {
+    }
 
     public record ContactUsUpdateRequest(
             @NotBlank(message = "Name is required")
@@ -119,5 +121,36 @@ public class DTORecords {
             String message,
 
             Boolean isResponded
-    ) {}
+    ) {
+    }
+
+    //FAQ RECORDS
+
+    public record FAQResponse(
+            Long id,
+            String question,
+            String answer
+    ) {
+    }
+
+    public record FAQRequest(
+            @NotBlank(message = "Question in Azerbaijani is required")
+            String questionAz,
+
+            @NotBlank(message = "Question in Russian is required")
+            String questionRu,
+
+            @NotBlank(message = "Question in English is required")
+            String questionEn,
+
+            @NotBlank(message = "Answer in Azerbaijani is required")
+            String answerAz,
+
+            @NotBlank(message = "Answer in Russian is required")
+            String answerRu,
+
+            @NotBlank(message = "Answer in English is required")
+            String answerEn
+    ) {
+    }
 }

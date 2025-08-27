@@ -2,9 +2,9 @@ package com.sadiqov.tour_manager_app.service;
 
 import com.sadiqov.tour_manager_app.dto.DTORecords;
 import com.sadiqov.tour_manager_app.dto.DTORecords.DemoAppealRequest;
-import com.sadiqov.tour_manager_app.entity.DemoAppeal;
-import com.sadiqov.tour_manager_app.entity.PhoneNumber;
-import com.sadiqov.tour_manager_app.entity.Address;
+import com.sadiqov.tour_manager_app.entity.home_page.DemoAppeal;
+import com.sadiqov.tour_manager_app.entity.home_page.PhoneNumber;
+import com.sadiqov.tour_manager_app.entity.home_page.Address;
 import com.sadiqov.tour_manager_app.mapper.AddressMapper;
 import com.sadiqov.tour_manager_app.mapper.DemoAppealMapper;
 import com.sadiqov.tour_manager_app.mapper.PhoneNumberMapper;

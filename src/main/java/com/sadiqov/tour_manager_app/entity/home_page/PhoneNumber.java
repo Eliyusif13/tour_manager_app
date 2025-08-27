@@ -1,4 +1,4 @@
-package com.sadiqov.tour_manager_app.entity;
+package com.sadiqov.tour_manager_app.entity.home_page;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

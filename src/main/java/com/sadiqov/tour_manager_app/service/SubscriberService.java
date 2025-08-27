@@ -2,7 +2,7 @@ package com.sadiqov.tour_manager_app.service;
 
 import com.sadiqov.tour_manager_app.dto.DTORecords.SubscriberRequest;
 import com.sadiqov.tour_manager_app.dto.DTORecords.SubscriberResponse;
-import com.sadiqov.tour_manager_app.entity.Subscriber;
+import com.sadiqov.tour_manager_app.entity.home_page.Subscriber;
 import com.sadiqov.tour_manager_app.mapper.SubscriberMapper;
 import com.sadiqov.tour_manager_app.repository.SubscriberRepository;
 import lombok.RequiredArgsConstructor;

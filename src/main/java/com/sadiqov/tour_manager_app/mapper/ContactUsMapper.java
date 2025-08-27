@@ -1,11 +1,10 @@
 package com.sadiqov.tour_manager_app.mapper;
 
 import com.sadiqov.tour_manager_app.dto.DTORecords.*;
-import com.sadiqov.tour_manager_app.entity.ContactUs;
+import com.sadiqov.tour_manager_app.entity.home_page.ContactUs;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface ContactUsMapper {
