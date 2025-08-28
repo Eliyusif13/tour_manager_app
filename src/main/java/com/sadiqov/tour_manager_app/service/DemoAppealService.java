@@ -22,7 +22,7 @@ public class DemoAppealService {
     private final DemoAppealMapper demoAppealMapper;
 
     @Transactional
-    public DemoAppealResponse createDemoAppeal(DemoAppealRequest request) {
+    public void createDemoAppeal(DemoAppealRequest request) {
         DemoAppeal demoAppeal = demoAppealMapper.toEntity(request);
 
         if (request.phoneNumbers() != null) {
@@ -41,11 +41,11 @@ public class DemoAppealService {
             demoAppeal.setAddress(address);
         }
 
-        return demoAppealMapper.toResponse(demoAppealRepository.save(demoAppeal));
+        demoAppealMapper.toResponse(demoAppealRepository.save(demoAppeal));
     }
 
     @Transactional
-    public DemoAppealResponse updateDemoAppeal(Long id, DemoAppealRequest request) {
+    public void updateDemoAppeal(Long id, DemoAppealRequest request) {
         DemoAppeal demoAppeal = demoAppealRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Demo appeal not found"));
 
@@ -85,7 +85,7 @@ public class DemoAppealService {
             }
         }
 
-        return demoAppealMapper.toResponse(demoAppealRepository.save(demoAppeal));
+        demoAppealMapper.toResponse(demoAppealRepository.save(demoAppeal));
     }
 
     @Transactional

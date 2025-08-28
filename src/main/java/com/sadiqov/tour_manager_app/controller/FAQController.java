@@ -32,22 +32,16 @@ public class FAQController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> createFAQ(@Valid @RequestBody FAQRequest request) {
-        FAQResponse response = faqService.createFAQ(request);
-        return ResponseEntity.ok(Map.of(
-                "message", "FAQ successfully created",
-                "id", response.id().toString()
-        ));
+        faqService.createFAQ(request);
+        return ResponseEntity.ok(Map.of("message", "FAQ successfully created"));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, String>> updateFAQ(
             @PathVariable Long id,
             @Valid @RequestBody FAQRequest request) {
-        FAQResponse response = faqService.updateFAQ(id, request);
-        return ResponseEntity.ok(Map.of(
-                "message", "FAQ successfully updated",
-                "id", response.id().toString()
-        ));
+        faqService.updateFAQ(id, request);
+        return ResponseEntity.ok(Map.of("message", "FAQ successfully updated"));
     }
 
     @DeleteMapping("/{id}")

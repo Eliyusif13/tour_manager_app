@@ -38,11 +38,8 @@ public class ContactUsController {
     @PostMapping
     public ResponseEntity<?> createContactRequest(@Valid @RequestBody ContactUsRequest request) {
         try {
-            ContactUsResponse response = contactUsService.createContactRequest(request);
-            return ResponseEntity.ok(Map.of(
-                    "message", "Contact request successfully created",
-                    "id", response.id().toString()
-            ));
+            contactUsService.createContactRequest(request);
+            return ResponseEntity.ok(Map.of("message", "Contact request successfully created"));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("error", e.getMessage()));
@@ -53,11 +50,8 @@ public class ContactUsController {
     public ResponseEntity<Map<String, String>> updateContactRequest(
             @PathVariable Long id,
             @Valid @RequestBody ContactUsUpdateRequest request) {
-        ContactUsResponse response = contactUsService.updateContactRequest(id, request);
-        return ResponseEntity.ok(Map.of(
-                "message", "Contact request successfully updated",
-                "id", response.id().toString()
-        ));
+        contactUsService.updateContactRequest(id, request);
+        return ResponseEntity.ok(Map.of("message", "Contact request successfully updated"));
     }
 
     @PatchMapping("/{id}/mark-responded")

@@ -30,22 +30,16 @@ public class DemoAppealController {
     @PostMapping
     public ResponseEntity<Map<String, String>> createDemoAppeal(
             @Valid @RequestBody DemoAppealRequest request) {
-        DemoAppealResponse response = demoAppealService.createDemoAppeal(request);
-        return ResponseEntity.ok(Map.of(
-                "message", "Demo request successfully created",
-                "id", response.id().toString()
-        ));
+        demoAppealService.createDemoAppeal(request);
+        return ResponseEntity.ok(Map.of("message", "Demo request successfully created"));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, String>> updateDemoAppeal(
             @PathVariable Long id,
             @Valid @RequestBody DemoAppealRequest request) {
-        DemoAppealResponse response = demoAppealService.updateDemoAppeal(id, request);
-        return ResponseEntity.ok(Map.of(
-                "message", "Demo appeal successfully updated",
-                "id", response.id().toString()
-        ));
+        demoAppealService.updateDemoAppeal(id, request);
+        return ResponseEntity.ok(Map.of("message", "Demo appeal successfully updated"));
     }
 
     @DeleteMapping("/{id}")

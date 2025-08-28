@@ -31,22 +31,16 @@ public class FeatureController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> createFeature(@Valid @RequestBody FeatureRequest request) {
-        FeatureResponse response = featureService.createFeature(request);
-        return ResponseEntity.ok(Map.of(
-                "message", "Feature successfully created",
-                "id", response.id().toString()
-        ));
+        featureService.createFeature(request);
+        return ResponseEntity.ok(Map.of("message", "Feature successfully created"));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, String>> updateFeature(
             @PathVariable Long id,
             @Valid @RequestBody FeatureRequest request) {
-        FeatureResponse response = featureService.updateFeature(id, request);
-        return ResponseEntity.ok(Map.of(
-                "message", "Feature successfully updated",
-                "id", response.id().toString()
-        ));
+        featureService.updateFeature(id, request);
+        return ResponseEntity.ok(Map.of("message", "Feature successfully updated"));
     }
 
     @DeleteMapping("/{id}")

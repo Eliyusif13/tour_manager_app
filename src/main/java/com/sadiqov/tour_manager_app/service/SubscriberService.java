@@ -26,14 +26,14 @@ public class SubscriberService {
                 .map(subscriberMapper::toResponse);
     }
 
-    public SubscriberResponse createSubscriber(SubscriberRequest request) {
+    public void createSubscriber(SubscriberRequest request) {
         if (subscriberRepository.existsByEmail(request.email())) {
             throw new RuntimeException("Email already exists");
         }
 
         Subscriber subscriber = subscriberMapper.toEntity(request);
         Subscriber savedSubscriber = subscriberRepository.save(subscriber);
-        return subscriberMapper.toResponse(savedSubscriber);
+        subscriberMapper.toResponse(savedSubscriber);
     }
 
     public void deactivateSubscriber(Long id) {

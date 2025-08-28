@@ -40,21 +40,21 @@ public class ContactUsService {
                 .map(contactUsMapper::toResponse);
     }
 
-    public ContactUsResponse createContactRequest(ContactUsRequest request) {
+    public void createContactRequest(ContactUsRequest request) {
         validateSubscription(request.email());
         checkForDuplicateRequests(request.email());
 
         ContactUs contactUs = contactUsMapper.toEntity(request);
-        return contactUsMapper.toResponse(contactUsRepository.save(contactUs));
+        contactUsMapper.toResponse(contactUsRepository.save(contactUs));
     }
 
     @Transactional
-    public ContactUsResponse updateContactRequest(Long id, ContactUsUpdateRequest request) {
+    public void updateContactRequest(Long id, ContactUsUpdateRequest request) {
         ContactUs contactUs = contactUsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contact request not found"));
 
         contactUsMapper.updateEntityFromRequest(request, contactUs);
-        return contactUsMapper.toResponse(contactUsRepository.save(contactUs));
+        contactUsMapper.toResponse(contactUsRepository.save(contactUs));
     }
 
     public void markAsResponded(Long id) {

@@ -26,13 +26,13 @@ public class FAQService {
                 .map(faq -> faqMapper.toResponse(faq, lang));
     }
 
-    public FAQResponse createFAQ(FAQRequest request) {
+    public void createFAQ(FAQRequest request) {
         FAQ faq = faqMapper.toEntity(request);
         FAQ savedFAQ = faqRepository.save(faq);
-        return faqMapper.toResponse(savedFAQ, "az"); // Default language
+        faqMapper.toResponse(savedFAQ, "az");
     }
 
-    public FAQResponse updateFAQ(Long id, FAQRequest request) {
+    public void updateFAQ(Long id, FAQRequest request) {
         FAQ existingFAQ = faqRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("FAQ not found with id: " + id));
 
@@ -44,7 +44,7 @@ public class FAQService {
         existingFAQ.setAnswerEn(request.answerEn());
 
         FAQ updatedFAQ = faqRepository.save(existingFAQ);
-        return faqMapper.toResponse(updatedFAQ, "az"); // Default language
+        faqMapper.toResponse(updatedFAQ, "az");
     }
 
     public void deleteFAQ(Long id) {

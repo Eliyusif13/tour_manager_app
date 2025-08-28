@@ -35,7 +35,7 @@ public class FeatureService {
     }
 
     @Transactional
-    public FeatureResponse createFeature(FeatureRequest request) {
+    public void createFeature(FeatureRequest request) {
         Feature feature = featureMapper.toEntity(request);
 
         if (request.image() != null && !request.image().isEmpty()) {
@@ -44,11 +44,11 @@ public class FeatureService {
         }
 
         Feature savedFeature = featureRepository.save(feature);
-        return featureMapper.toResponse(savedFeature, "az"); // Default language
+        featureMapper.toResponse(savedFeature, "az");
     }
 
     @Transactional
-    public FeatureResponse updateFeature(Long id, FeatureRequest request) {
+    public void updateFeature(Long id, FeatureRequest request) {
         Feature feature = featureRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Feature not found with id: " + id));
 
@@ -70,7 +70,7 @@ public class FeatureService {
         }
 
         Feature updatedFeature = featureRepository.save(feature);
-        return featureMapper.toResponse(updatedFeature, "az"); // Default language
+        featureMapper.toResponse(updatedFeature, "az");
     }
 
     @Transactional

@@ -30,11 +30,8 @@ public class SubscriberController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> createSubscriber(@Valid @RequestBody SubscriberRequest request) {
-        SubscriberResponse response = subscriberService.createSubscriber(request);
-        return ResponseEntity.ok(Map.of(
-                "message", "Subscriber successfully created",
-                "id", response.id().toString()
-        ));
+        subscriberService.createSubscriber(request);
+        return ResponseEntity.ok(Map.of("message", "Subscriber successfully created"));
     }
 
     @PatchMapping("/{id}/deactivate")
