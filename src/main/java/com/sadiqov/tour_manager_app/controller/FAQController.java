@@ -33,18 +33,16 @@ public class FAQController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> createFAQ(@Valid @RequestBody FAQRequest request) {
+    public void createFAQ(@Valid @RequestBody FAQRequest request) {
         faqService.createFAQ(request);
-        return Map.of("message", "FAQ successfully created");
     }
 
     @PutMapping("/{id}")
-    public Map<String, String> updateFAQ(
+    public void updateFAQ(
             @PathVariable Long id,
             @Valid @RequestBody FAQRequest request) {
         faqService.updateFAQ(id, request);
-        return Map.of("message", "FAQ successfully updated");
-    }
+      }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

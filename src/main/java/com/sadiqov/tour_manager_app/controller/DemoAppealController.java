@@ -30,18 +30,16 @@ public class DemoAppealController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> createDemoAppeal(
+    public void createDemoAppeal(
             @Valid @RequestBody DemoAppealRequest request) {
         demoAppealService.createDemoAppeal(request);
-        return Map.of("message", "Demo request successfully created");
     }
 
     @PutMapping("/{id}")
-    public Map<String, String> updateDemoAppeal(
+    public void updateDemoAppeal(
             @PathVariable Long id,
             @Valid @RequestBody DemoAppealRequest request) {
         demoAppealService.updateDemoAppeal(id, request);
-        return Map.of("message", "Demo appeal successfully updated");
     }
 
     @DeleteMapping("/{id}")

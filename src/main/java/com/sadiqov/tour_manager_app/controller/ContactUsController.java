@@ -37,23 +37,20 @@ public class ContactUsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> createContactRequest(@Valid @RequestBody ContactUsRequest request) {
+    public void createContactRequest(@Valid @RequestBody ContactUsRequest request) {
         contactUsService.createContactRequest(request);
-        return Map.of("message", "Contact request successfully created");
     }
 
     @PutMapping("/{id}")
-    public Map<String, String> updateContactRequest(
+    public void updateContactRequest(
             @PathVariable Long id,
             @Valid @RequestBody ContactUsUpdateRequest request) {
         contactUsService.updateContactRequest(id, request);
-        return Map.of("message", "Contact request successfully updated");
     }
 
     @PatchMapping("/{id}/mark-responded")
-    public Map<String, String> markAsResponded(@PathVariable Long id) {
+    public void markAsResponded(@PathVariable Long id) {
         contactUsService.markAsResponded(id);
-        return Map.of("message", "Contact request successfully marked as responded");
     }
 
     @DeleteMapping("/{id}")

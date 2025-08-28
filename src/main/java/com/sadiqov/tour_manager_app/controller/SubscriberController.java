@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/subscribers")
@@ -31,22 +30,19 @@ public class SubscriberController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> createSubscriber(@Valid @RequestBody SubscriberRequest request) {
+    public void createSubscriber(@Valid @RequestBody SubscriberRequest request) {
         subscriberService.createSubscriber(request);
-        return Map.of("message", "Subscriber successfully created");
-    }
+      }
 
     @PatchMapping("/{id}/deactivate")
-    public Map<String, String> deactivateSubscriber(@PathVariable Long id) {
+    public void     deactivateSubscriber(@PathVariable Long id) {
         subscriberService.deactivateSubscriber(id);
-        return Map.of("message", "Subscriber successfully deactivated");
-    }
+      }
 
     @PatchMapping("/{id}/activate")
-    public Map<String, String> activateSubscriber(@PathVariable Long id) {
+    public void activateSubscriber(@PathVariable Long id) {
         subscriberService.activateSubscriber(id);
-        return Map.of("message", "Subscriber successfully activated");
-    }
+      }
 
     @GetMapping("/count/active")
     public ResponseEntity<Long> getActiveSubscribersCount() {

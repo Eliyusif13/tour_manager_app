@@ -8,9 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/features")
@@ -32,18 +30,16 @@ public class FeatureController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> createFeature(@Valid @RequestBody FeatureRequest request) {
+    public void createFeature(@Valid @RequestBody FeatureRequest request) {
         featureService.createFeature(request);
-        return Map.of("message", "Feature successfully created");
-    }
+      }
 
     @PutMapping("/{id}")
-    public Map<String, String> updateFeature(
+    public void updateFeature(
             @PathVariable Long id,
             @Valid @RequestBody FeatureRequest request) {
         featureService.updateFeature(id, request);
-        return Map.of("message", "Feature successfully updated");
-    }
+      }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
