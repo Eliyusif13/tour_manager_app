@@ -1,4 +1,4 @@
-package com.sadiqov.tour_manager_app.entity;
+package com.sadiqov.tour_manager_app.entity.base;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.sadiqov.tour_manager_app.entity.home_page;
 
-import com.sadiqov.tour_manager_app.entity.BaseEntity;
+import com.sadiqov.tour_manager_app.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;

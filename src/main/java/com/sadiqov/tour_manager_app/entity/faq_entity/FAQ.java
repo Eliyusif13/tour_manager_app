@@ -1,6 +1,6 @@
 package com.sadiqov.tour_manager_app.entity.faq_entity;
 
-import com.sadiqov.tour_manager_app.entity.BaseEntity;
+import com.sadiqov.tour_manager_app.entity.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
