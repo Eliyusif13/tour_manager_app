@@ -1,8 +1,7 @@
 package com.sadiqov.tour_manager_app.service;
 
-import com.sadiqov.tour_manager_app.dto.DTORecords.ContactUsRequest;
-import com.sadiqov.tour_manager_app.dto.DTORecords.ContactUsResponse;
-import com.sadiqov.tour_manager_app.dto.DTORecords.ContactUsUpdateRequest;
+import com.sadiqov.tour_manager_app.dto.request.*;
+import com.sadiqov.tour_manager_app.dto.response.ContactUsResponse;
 import com.sadiqov.tour_manager_app.entity.home_page.ContactUs;
 import com.sadiqov.tour_manager_app.entity.home_page.Subscriber;
 import com.sadiqov.tour_manager_app.mapper.ContactUsMapper;
@@ -43,9 +42,7 @@ public class ContactUsService {
 
     public ContactUsResponse createContactRequest(ContactUsRequest request) {
         validateSubscription(request.email());
-
         checkForDuplicateRequests(request.email());
-
 
         ContactUs contactUs = contactUsMapper.toEntity(request);
         return contactUsMapper.toResponse(contactUsRepository.save(contactUs));
@@ -74,6 +71,7 @@ public class ContactUsService {
     public long getUnrespondedCount() {
         return contactUsRepository.countByIsRespondedFalse();
     }
+
     private void validateSubscription(String email) {
         Optional<Subscriber> subscriber = subscriberRepository.findByEmail(email);
 

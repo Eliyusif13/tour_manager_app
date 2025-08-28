@@ -1,7 +1,7 @@
 package com.sadiqov.tour_manager_app.service;
 
-import com.sadiqov.tour_manager_app.dto.DTORecords.SubscriberRequest;
-import com.sadiqov.tour_manager_app.dto.DTORecords.SubscriberResponse;
+import com.sadiqov.tour_manager_app.dto.request.SubscriberRequest;
+import com.sadiqov.tour_manager_app.dto.response.SubscriberResponse;
 import com.sadiqov.tour_manager_app.entity.home_page.Subscriber;
 import com.sadiqov.tour_manager_app.mapper.SubscriberMapper;
 import com.sadiqov.tour_manager_app.repository.SubscriberRepository;
@@ -31,12 +31,9 @@ public class SubscriberService {
             throw new RuntimeException("Email already exists");
         }
 
-        Subscriber subscriber = new Subscriber();
-        subscriber.setEmail(request.email());
-        subscriber.setCreatedAt(java.time.LocalDateTime.now());
-        subscriber.setIsActive(true);
-
-        return subscriberMapper.toResponse(subscriberRepository.save(subscriber));
+        Subscriber subscriber = subscriberMapper.toEntity(request);
+        Subscriber savedSubscriber = subscriberRepository.save(subscriber);
+        return subscriberMapper.toResponse(savedSubscriber);
     }
 
     public void deactivateSubscriber(Long id) {
@@ -46,7 +43,18 @@ public class SubscriberService {
         subscriberRepository.save(subscriber);
     }
 
+    public void activateSubscriber(Long id) {
+        Subscriber subscriber = subscriberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subscriber not found"));
+        subscriber.setIsActive(true);
+        subscriberRepository.save(subscriber);
+    }
+
     public long getActiveSubscribersCount() {
         return subscriberRepository.countByIsActiveTrue();
+    }
+
+    public long getAllSubscribersCount() {
+        return subscriberRepository.count();
     }
 }

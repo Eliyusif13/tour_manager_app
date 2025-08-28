@@ -1,7 +1,7 @@
 package com.sadiqov.tour_manager_app.controller;
 
-import com.sadiqov.tour_manager_app.dto.DTORecords.SubscriberRequest;
-import com.sadiqov.tour_manager_app.dto.DTORecords.SubscriberResponse;
+import com.sadiqov.tour_manager_app.dto.request.SubscriberRequest;
+import com.sadiqov.tour_manager_app.dto.response.SubscriberResponse;
 import com.sadiqov.tour_manager_app.service.SubscriberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +24,17 @@ public class SubscriberController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SubscriberResponse> getSubscriberById(@PathVariable Long id) {
-        return subscriberService.getSubscriberById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(subscriberService.getSubscriberById(id)
+                .orElseThrow(() -> new RuntimeException("Subscriber not found")));
     }
 
     @PostMapping
     public ResponseEntity<Map<String, String>> createSubscriber(@Valid @RequestBody SubscriberRequest request) {
-        subscriberService.createSubscriber(request);
-        return ResponseEntity.ok(Map.of("message", "Subscriber successfully created"));
+        SubscriberResponse response = subscriberService.createSubscriber(request);
+        return ResponseEntity.ok(Map.of(
+                "message", "Subscriber successfully created",
+                "id", response.id().toString()
+        ));
     }
 
     @PatchMapping("/{id}/deactivate")
@@ -41,8 +43,19 @@ public class SubscriberController {
         return ResponseEntity.ok(Map.of("message", "Subscriber successfully deactivated"));
     }
 
+    @PatchMapping("/{id}/activate")
+    public ResponseEntity<Map<String, String>> activateSubscriber(@PathVariable Long id) {
+        subscriberService.activateSubscriber(id);
+        return ResponseEntity.ok(Map.of("message", "Subscriber successfully activated"));
+    }
+
     @GetMapping("/count/active")
     public ResponseEntity<Long> getActiveSubscribersCount() {
         return ResponseEntity.ok(subscriberService.getActiveSubscribersCount());
+    }
+
+    @GetMapping("/count/all")
+    public ResponseEntity<Long> getAllSubscribersCount() {
+        return ResponseEntity.ok(subscriberService.getAllSubscribersCount());
     }
 }

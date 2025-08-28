@@ -1,33 +1,32 @@
 package com.sadiqov.tour_manager_app.service;
 
-import com.sadiqov.tour_manager_app.dto.DTORecords;
-import com.sadiqov.tour_manager_app.dto.DTORecords.DemoAppealRequest;
+import com.sadiqov.tour_manager_app.dto.request.DemoAppealRequest;
+import com.sadiqov.tour_manager_app.dto.response.DemoAppealResponse;
+import com.sadiqov.tour_manager_app.dto.request.PhoneNumberRequest;
 import com.sadiqov.tour_manager_app.entity.home_page.DemoAppeal;
 import com.sadiqov.tour_manager_app.entity.home_page.PhoneNumber;
 import com.sadiqov.tour_manager_app.entity.home_page.Address;
-import com.sadiqov.tour_manager_app.mapper.AddressMapper;
 import com.sadiqov.tour_manager_app.mapper.DemoAppealMapper;
-import com.sadiqov.tour_manager_app.mapper.PhoneNumberMapper;
-import com.sadiqov.tour_manager_app.repository.*;
+import com.sadiqov.tour_manager_app.repository.DemoAppealRepository;
+import com.sadiqov.tour_manager_app.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class DemoAppealService {
     private final DemoAppealRepository demoAppealRepository;
-    private final PhoneNumberMapper phoneNumberMapper;
     private final AddressRepository addressRepository;
     private final DemoAppealMapper demoAppealMapper;
-    private final AddressMapper addressMapper;
 
     @Transactional
-    public void createDemoAppeal(DemoAppealRequest request) {
+    public DemoAppealResponse createDemoAppeal(DemoAppealRequest request) {
         DemoAppeal demoAppeal = demoAppealMapper.toEntity(request);
 
         if (request.phoneNumbers() != null) {
-            for (DTORecords.PhoneNumberRequest phoneRequest : request.phoneNumbers()) {
+            for (PhoneNumberRequest phoneRequest : request.phoneNumbers()) {
                 PhoneNumber phoneNumber = new PhoneNumber();
                 phoneNumber.setPhoneNumber(phoneRequest.phoneNumber());
                 demoAppeal.addPhoneNumber(phoneNumber);
@@ -42,20 +41,24 @@ public class DemoAppealService {
             demoAppeal.setAddress(address);
         }
 
-        demoAppealMapper.toResponse(demoAppealRepository.save(demoAppeal));
+        return demoAppealMapper.toResponse(demoAppealRepository.save(demoAppeal));
     }
 
     @Transactional
-    public void updateDemoAppeal(Long id, DemoAppealRequest request) {
+    public DemoAppealResponse updateDemoAppeal(Long id, DemoAppealRequest request) {
         DemoAppeal demoAppeal = demoAppealRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Demo appeal not found"));
 
+        demoAppeal.setFullName(request.fullName());
         demoAppeal.setEmail(request.email());
+        demoAppeal.setCompanyName(request.companyName());
+        demoAppeal.setMessage(request.message());
 
         demoAppeal.getPhoneNumbers().clear();
         if (request.phoneNumbers() != null) {
             for (var phoneRequest : request.phoneNumbers()) {
-                PhoneNumber phoneNumber = phoneNumberMapper.toEntity(phoneRequest);
+                PhoneNumber phoneNumber = new PhoneNumber();
+                phoneNumber.setPhoneNumber(phoneRequest.phoneNumber());
                 phoneNumber.setDemoAppeal(demoAppeal);
                 demoAppeal.addPhoneNumber(phoneNumber);
             }
@@ -68,7 +71,10 @@ public class DemoAppealService {
                 existingAddress.setAddressEn(request.address().addressEn());
                 existingAddress.setAddressRu(request.address().addressRu());
             } else {
-                Address newAddress = addressMapper.toEntity(request.address());
+                Address newAddress = new Address();
+                newAddress.setAddressAz(request.address().addressAz());
+                newAddress.setAddressEn(request.address().addressEn());
+                newAddress.setAddressRu(request.address().addressRu());
                 newAddress.setDemoAppeal(demoAppeal);
                 demoAppeal.setAddress(newAddress);
             }
@@ -79,7 +85,7 @@ public class DemoAppealService {
             }
         }
 
-        demoAppealMapper.toResponse(demoAppealRepository.save(demoAppeal));
+        return demoAppealMapper.toResponse(demoAppealRepository.save(demoAppeal));
     }
 
     @Transactional
@@ -88,7 +94,16 @@ public class DemoAppealService {
                 .orElseThrow(() -> new RuntimeException("Demo appeal not found"));
 
         demoAppeal.getPhoneNumbers().clear();
-
         demoAppealRepository.delete(demoAppeal);
+    }
+
+    public DemoAppealResponse getDemoAppealById(Long id) {
+        DemoAppeal demoAppeal = demoAppealRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Demo appeal not found"));
+        return demoAppealMapper.toResponse(demoAppeal);
+    }
+
+    public List<DemoAppealResponse> getAllDemoAppeals() {
+        return demoAppealMapper.toResponseList(demoAppealRepository.findAll());
     }
 }

@@ -1,19 +1,20 @@
 package com.sadiqov.tour_manager_app.entity.home_page;
 
+import com.sadiqov.tour_manager_app.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
 @Entity
 @Table(name = "addresses")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @NoArgsConstructor
-public class Address {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+@EqualsAndHashCode(callSuper = true)
+public class Address extends BaseEntity<Long> {
 
     @Column(name = "address_az", length = 500)
     String addressAz;

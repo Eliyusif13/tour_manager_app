@@ -1,10 +1,12 @@
 package com.sadiqov.tour_manager_app.entity.home_page;
 
+import com.sadiqov.tour_manager_app.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
@@ -14,10 +16,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PhoneNumber {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+@EqualsAndHashCode(callSuper = true)
+public class PhoneNumber extends BaseEntity<Long> {
 
     @NotBlank(message = "Phone number is required")
     @Column(name = "phone_number", nullable = false)

@@ -13,6 +13,9 @@
             <h1>Book a demo</h1>
             <p class="subtitle">Schedule your demo!</p>
             <p class="description">Start small, scale fast - switch plans anytime as your team expands</p>
+
+            <!-- FAQ butonu əlavə edirəm -->
+            <button id="faqButton" class="faq-btn">Tez-tez verilən suallar</button>
         </div>
 
         <div id="alertBox" class="alert"></div>
@@ -72,6 +75,42 @@
         <h1>Thank You!</h1>
         <p>Your demo request has been successfully submitted. Our team will contact you shortly.</p>
         <button class="back-btn" onclick="goBack()">Submit Another Request</button>
+    </div>
+</div>
+
+<div class="faq-container" id="faq-container" style="display: none;">
+    <div class="faq-content">
+        <div class="faq-header">
+            <h1>Tez-tez verilən suallar</h1>
+            <button class="back-btn" onclick="goBackFromFaq()">Geri qayıt</button>
+        </div>
+
+        <div class="faq-list" id="faqList">
+            <div class="faq-loading">Sual və cavablar yüklənir...</div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="main-container2">
+    <div class="form-section">
+        <!-- Form content eyni qalır -->
+    </div>
+
+    <div class="image-section">
+        <div class="animation-container">
+            <div class="animation-text">
+                <h2>Bizim Üstünlüklərimiz</h2>
+                <p>Sizə daha yaxşı xidmət təqdim etmək üçün</p>
+            </div>
+
+            <!-- FEATURE SECTION -->
+            <div class="features-section">
+                <div class="features-grid" id="featuresGrid">
+                    <!-- Features burada dinamik olaraq doldurulacaq -->
+                    <div class="feature-loading">Xüsusiyyətlər yüklənir...</div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

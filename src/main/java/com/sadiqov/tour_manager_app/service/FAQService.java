@@ -1,7 +1,7 @@
 package com.sadiqov.tour_manager_app.service;
 
-import com.sadiqov.tour_manager_app.dto.DTORecords.FAQRequest;
-import com.sadiqov.tour_manager_app.dto.DTORecords.FAQResponse;
+import com.sadiqov.tour_manager_app.dto.request.FAQRequest;
+import com.sadiqov.tour_manager_app.dto.response.FAQResponse;
 import com.sadiqov.tour_manager_app.entity.faq_entity.FAQ;
 import com.sadiqov.tour_manager_app.mapper.FAQMapper;
 import com.sadiqov.tour_manager_app.repository.FAQRepository;
@@ -26,12 +26,13 @@ public class FAQService {
                 .map(faq -> faqMapper.toResponse(faq, lang));
     }
 
-    public void createFAQ(FAQRequest request) {
+    public FAQResponse createFAQ(FAQRequest request) {
         FAQ faq = faqMapper.toEntity(request);
-        faqRepository.save(faq);
+        FAQ savedFAQ = faqRepository.save(faq);
+        return faqMapper.toResponse(savedFAQ, "az"); // Default language
     }
 
-    public void updateFAQ(Long id, FAQRequest request) {
+    public FAQResponse updateFAQ(Long id, FAQRequest request) {
         FAQ existingFAQ = faqRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("FAQ not found with id: " + id));
 
@@ -42,7 +43,8 @@ public class FAQService {
         existingFAQ.setAnswerRu(request.answerRu());
         existingFAQ.setAnswerEn(request.answerEn());
 
-        faqRepository.save(existingFAQ);
+        FAQ updatedFAQ = faqRepository.save(existingFAQ);
+        return faqMapper.toResponse(updatedFAQ, "az"); // Default language
     }
 
     public void deleteFAQ(Long id) {

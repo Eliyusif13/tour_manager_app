@@ -1,23 +1,20 @@
 package com.sadiqov.tour_manager_app.entity.home_page;
 
-
+import com.sadiqov.tour_manager_app.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "contact_requests")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-public class ContactUs {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+@EqualsAndHashCode(callSuper = true)
+public class ContactUs extends BaseEntity<Long> {
 
     @NotBlank(message = "Name is required")
     String name;
@@ -30,14 +27,10 @@ public class ContactUs {
     @Column(length = 1000)
     String message;
 
-    @Column(name = "created_at")
-    LocalDateTime createdAt;
-
     @Column(name = "is_responded")
     Boolean isResponded;
 
     public ContactUs() {
-        this.createdAt = LocalDateTime.now();
         this.isResponded = false;
     }
 }

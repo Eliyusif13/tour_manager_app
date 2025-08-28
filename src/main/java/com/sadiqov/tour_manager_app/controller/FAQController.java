@@ -1,7 +1,7 @@
 package com.sadiqov.tour_manager_app.controller;
 
-import com.sadiqov.tour_manager_app.dto.DTORecords.FAQRequest;
-import com.sadiqov.tour_manager_app.dto.DTORecords.FAQResponse;
+import com.sadiqov.tour_manager_app.dto.request.FAQRequest;
+import com.sadiqov.tour_manager_app.dto.response.FAQResponse;
 import com.sadiqov.tour_manager_app.service.FAQService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/faqs")
@@ -27,23 +26,28 @@ public class FAQController {
     public ResponseEntity<FAQResponse> getFAQById(
             @PathVariable String lang,
             @PathVariable Long id) {
-        Optional<FAQResponse> faq = faqService.getFAQById(id, lang);
-        return faq.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(faqService.getFAQById(id, lang)
+                .orElseThrow(() -> new RuntimeException("FAQ not found")));
     }
 
     @PostMapping
     public ResponseEntity<Map<String, String>> createFAQ(@Valid @RequestBody FAQRequest request) {
-        faqService.createFAQ(request);
-        return ResponseEntity.ok(Map.of("message", "FAQ successfully created"));
+        FAQResponse response = faqService.createFAQ(request);
+        return ResponseEntity.ok(Map.of(
+                "message", "FAQ successfully created",
+                "id", response.id().toString()
+        ));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, String>> updateFAQ(
             @PathVariable Long id,
             @Valid @RequestBody FAQRequest request) {
-        faqService.updateFAQ(id, request);
-        return ResponseEntity.ok(Map.of("message", "FAQ successfully updated"));
+        FAQResponse response = faqService.updateFAQ(id, request);
+        return ResponseEntity.ok(Map.of(
+                "message", "FAQ successfully updated",
+                "id", response.id().toString()
+        ));
     }
 
     @DeleteMapping("/{id}")

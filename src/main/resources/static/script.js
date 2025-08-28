@@ -12,13 +12,11 @@ document.getElementById('demoAppealForm').addEventListener('submit', async funct
         message: document.getElementById('message').value
     };
 
-    // Validation - məcburi sahələri yoxlamaq
     if (!formData.fullName || !formData.email || !formData.phoneNumber) {
         showAlert('Please fill in all required fields', 'error');
         return;
     }
 
-    // Telefon nömrəsi validation - Azərbaycan nömrə formatı
     const phoneRegex = /^\+0(50|51|55|70|77|99|10)\d{7}$/;
     if (!phoneRegex.test(formData.phoneNumber)) {
         showAlert('Please enter a valid Azerbaijani phone number', 'error');
@@ -67,33 +65,28 @@ document.getElementById('demoAppealForm').addEventListener('submit', async funct
     }
 });
 
-// Alert göstərmək
 function showAlert(message, type) {
     const alertBox = document.getElementById('alertBox');
     alertBox.textContent = message;
     alertBox.className = `alert alert-${type}`;
     alertBox.style.display = 'block';
 
-    // 5 saniyədən sonra alerti gizlət
     setTimeout(() => {
         alertBox.style.display = 'none';
     }, 5000);
 }
 
-// Uğur səhifəsini göstərmək
 function showSuccessPage() {
     document.getElementById('main-container').style.display = 'none';
     document.getElementById('success-container').style.display = 'flex';
 }
 
-// Geri dönmək
 function goBack() {
     document.getElementById('success-container').style.display = 'none';
     document.getElementById('main-container').style.display = 'flex';
     document.getElementById('demoAppealForm').reset();
 }
 
-// Telefon nömrəsi formatına avtomatik çevirmək
 document.getElementById('phone').addEventListener('input', function(e) {
     // Yalnız rəqəmlərə icazə ver
     this.value = this.value.replace(/\D/g, '');
@@ -103,3 +96,198 @@ document.getElementById('phone').addEventListener('input', function(e) {
         this.value = this.value.slice(0, 9);
     }
 });
+document.getElementById('faqButton').addEventListener('click', function() {
+    showFAQPage();
+    loadFAQs('az'); // Default olaraq Azərbaycan dili
+});
+
+function showFAQPage() {
+    document.getElementById('main-container').style.display = 'none';
+    document.getElementById('success-container').style.display = 'none';
+    document.getElementById('faq-container').style.display = 'flex';
+}
+
+async function loadFAQs(lang) {
+    const faqList = document.getElementById('faqList');
+    faqList.innerHTML = '<div class="faq-loading">Sual və cavablar yüklənir...</div>';
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/faqs/${lang}`);
+        if (response.ok) {
+            const faqs = await response.json();
+            displayFAQs(faqs);
+        } else {
+            faqList.innerHTML = '<div class="faq-loading">Xəta baş verdi. Zəhmət olmasa sonra yenidən cəhd edin.</div>';
+        }
+    } catch (error) {
+        console.error('FAQ yüklənərkən xəta:', error);
+        displaySampleFAQs();
+    }
+}
+
+// FAQ-ları ekranda göstərmək
+function displayFAQs(faqs) {
+    const faqList = document.getElementById('faqList');
+
+    if (faqs.length === 0) {
+        faqList.innerHTML = '<div class="faq-loading">Hələlik heç bir sual-cavab yoxdur.</div>';
+        return;
+    }
+
+    let html = '';
+    faqs.forEach(faq => {
+        html += `
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    ${faq.question}
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    ${faq.answer}
+                </div>
+            </div>
+        `;
+    });
+
+    faqList.innerHTML = html;
+}
+
+function displaySampleFAQs() {
+    const faqList = document.getElementById('faqList');
+    const sampleFAQs = [
+        {
+            question: "Sizə necə müraciət edə bilərəm?",
+            answer: "Bizimlə email və ya telefon vasitəsilə əlaqə saxlaya bilərsiniz."
+        },
+        {
+            question: "Turun qiymətinə nə daxildir?",
+            answer: "Turun qiymətinə yaşayış, nəqliyyat və bələdçi xidməti daxildir."
+        },
+        {
+            question: "Ödənişi necə edə bilərəm?",
+            answer: "Ödənişi kartla, nağd və ya bank köçürməsi ilə edə bilərsiniz."
+        }
+    ];
+
+    let html = '';
+    sampleFAQs.forEach(faq => {
+        html += `
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    ${faq.question}
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    ${faq.answer}
+                </div>
+            </div>
+        `;
+    });
+
+    faqList.innerHTML = html;
+}
+
+// FAQ açmaq/bağlamaq
+function toggleFAQ(element) {
+    const answer = element.nextElementSibling;
+    const icon = element.querySelector('.faq-icon');
+
+    if (answer.style.display === 'block') {
+        answer.style.display = 'none';
+        icon.classList.remove('rotated');
+    } else {
+        answer.style.display = 'block';
+        icon.classList.add('rotated');
+    }
+}
+
+// FAQ səhifəsindən geri qayıtmaq
+function goBackFromFaq() {
+    document.getElementById('faq-container').style.display = 'none';
+    document.getElementById('main-container').style.display = 'flex';
+}
+
+// Səhifə yükləndikdə feature-ləri götür
+document.addEventListener('DOMContentLoaded', function() {
+    loadFeatures('az'); // Default olaraq Azərbaycan dili
+});
+
+// Feature-ləri yükləmək
+async function loadFeatures(lang) {
+    const featuresGrid = document.getElementById('featuresGrid');
+    featuresGrid.innerHTML = '<div class="feature-loading">Xüsusiyyətlər yüklənir...</div>';
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/features/${lang}`);
+        if (response.ok) {
+            const features = await response.json();
+            displayFeatures(features);
+        } else {
+            displaySampleFeatures();
+        }
+    } catch (error) {
+        console.error('Feature-lər yüklənərkən xəta:', error);
+        displaySampleFeatures();
+    }
+}
+
+function displayFeatures(features) {
+    const featuresGrid = document.getElementById('featuresGrid');
+
+    if (features.length === 0) {
+        featuresGrid.innerHTML = '<div class="feature-loading">Hələlik heç bir xüsusiyyət yoxdur.</div>';
+        return;
+    }
+
+    let html = '';
+    features.forEach(feature => {
+        html += `
+            <div class="feature-card">
+                ${feature.imagePath ? `
+                    <img src="http://localhost:8080/${feature.imagePath}" 
+                         alt="${feature.title}" 
+                         class="feature-image"
+                         style="width: 60px; height: 60px; border-radius: 50%; margin-bottom: 1rem;">
+                ` : `
+                    <div class="feature-icon">⭐</div>
+                `}
+                <h3 class="feature-title">${feature.title}</h3>
+                <p class="feature-text">${feature.text}</p>
+            </div>
+        `;
+    });
+
+    featuresGrid.innerHTML = html;
+}
+
+function displaySampleFeatures() {
+    const featuresGrid = document.getElementById('featuresGrid');
+    const sampleFeatures = [
+        {
+            title: "Sürətli Rezervasiya",
+            text: "24/7 onlayn rezervasiya xidməti"
+        },
+        {
+            title: "7/24 Dəstək",
+            text: "Hər zaman sizin xidmətinizdəyik"
+        },
+        {
+            title: "Peşəkar Komanda",
+            text: "Təcrübəli bələdçi və agentlər"
+        }
+    ];
+
+    let html = '';
+    sampleFeatures.forEach(feature => {
+        html += `
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3 class="feature-title">${feature.title}</h3>
+                <p class="feature-text">${feature.text}</p>
+            </div>
+        `;
+    });
+
+    featuresGrid.innerHTML = html;
+}
+

@@ -1,7 +1,7 @@
 package com.sadiqov.tour_manager_app.mapper;
 
-import com.sadiqov.tour_manager_app.dto.DTORecords.FAQRequest;
-import com.sadiqov.tour_manager_app.dto.DTORecords.FAQResponse;
+import com.sadiqov.tour_manager_app.dto.request.FAQRequest;
+import com.sadiqov.tour_manager_app.dto.response.FAQResponse;
 import com.sadiqov.tour_manager_app.entity.faq_entity.FAQ;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,7 +12,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface FAQMapper {
 
-    @Mapping(target = "id", ignore = true)
     FAQ toEntity(FAQRequest request);
 
     @Named("toAzResponse")

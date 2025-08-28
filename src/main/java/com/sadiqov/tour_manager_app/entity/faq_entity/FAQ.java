@@ -1,19 +1,19 @@
 package com.sadiqov.tour_manager_app.entity.faq_entity;
 
+import com.sadiqov.tour_manager_app.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "faqs")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-public class FAQ {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+@EqualsAndHashCode(callSuper = true)
+public class FAQ extends BaseEntity<Long> {
 
     @NotBlank(message = "Question in Azerbaijani is required")
     @Column(name = "question_az", columnDefinition = "TEXT", nullable = false)

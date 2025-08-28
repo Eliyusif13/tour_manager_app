@@ -1,12 +1,17 @@
 package com.sadiqov.tour_manager_app.controller;
 
-import com.sadiqov.tour_manager_app.dto.DTORecords.*;
+import com.sadiqov.tour_manager_app.dto.request.ContactUsRequest;
+import com.sadiqov.tour_manager_app.dto.response.ContactUsResponse;
+import com.sadiqov.tour_manager_app.dto.request.ContactUsUpdateRequest;
 import com.sadiqov.tour_manager_app.service.ContactUsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/contact-requests")
@@ -26,27 +31,33 @@ public class ContactUsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ContactUsResponse> getContactRequestById(@PathVariable Long id) {
-        return contactUsService.getContactRequestById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(contactUsService.getContactRequestById(id)
+                .orElseThrow(() -> new RuntimeException("Contact request not found")));
     }
+
     @PostMapping
     public ResponseEntity<?> createContactRequest(@Valid @RequestBody ContactUsRequest request) {
         try {
-            contactUsService.createContactRequest(request);
-            return ResponseEntity.ok(Map.of("message", "Contact request successfully created"));
+            ContactUsResponse response = contactUsService.createContactRequest(request);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Contact request successfully created",
+                    "id", response.id().toString()
+            ));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("error", e.getMessage()));
         }
-
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, String>> updateContactRequest(
             @PathVariable Long id,
             @Valid @RequestBody ContactUsUpdateRequest request) {
-        contactUsService.updateContactRequest(id, request);
-        return ResponseEntity.ok(Map.of("message", "Contact request successfully updated"));
+        ContactUsResponse response = contactUsService.updateContactRequest(id, request);
+        return ResponseEntity.ok(Map.of(
+                "message", "Contact request successfully updated",
+                "id", response.id().toString()
+        ));
     }
 
     @PatchMapping("/{id}/mark-responded")
