@@ -6,9 +6,11 @@ import com.sadiqov.tour_manager_app.entity.feature.Feature;
 import com.sadiqov.tour_manager_app.mapper.FeatureMapper;
 import com.sadiqov.tour_manager_app.repository.FeatureRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,7 +32,7 @@ public class FeatureService {
 
     public FeatureResponse getFeatureById(Long id, String lang) {
         Feature feature = featureRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Feature not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Feature not found with id: " + id));
         return featureMapper.toResponse(feature, lang);
     }
 
@@ -43,14 +45,13 @@ public class FeatureService {
             feature.setImagePath(imagePath);
         }
 
-        Feature savedFeature = featureRepository.save(feature);
-        featureMapper.toResponse(savedFeature, "az");
+        featureRepository.save(feature);
     }
 
     @Transactional
     public void updateFeature(Long id, FeatureRequest request) {
         Feature feature = featureRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Feature not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Feature not found with id: " + id));
 
         feature.setTitleAz(request.titleAz());
         feature.setTitleEn(request.titleEn());
@@ -61,7 +62,6 @@ public class FeatureService {
         feature.setRowOrder(request.rowOrder());
 
         if (request.image() != null && !request.image().isEmpty()) {
-            // Delete old image if exists
             if (feature.getImagePath() != null) {
                 deleteImage(feature.getImagePath());
             }
@@ -69,16 +69,14 @@ public class FeatureService {
             feature.setImagePath(imagePath);
         }
 
-        Feature updatedFeature = featureRepository.save(feature);
-        featureMapper.toResponse(updatedFeature, "az");
+        featureRepository.save(feature);
     }
 
     @Transactional
     public void deleteFeature(Long id) {
         Feature feature = featureRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Feature not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Feature not found with id: " + id));
 
-        // Delete associated image
         if (feature.getImagePath() != null) {
             deleteImage(feature.getImagePath());
         }
@@ -97,7 +95,7 @@ public class FeatureService {
             return UPLOAD_DIR + fileName;
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to save image: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to save image: " + e.getMessage());
         }
     }
 
@@ -108,7 +106,7 @@ public class FeatureService {
                 Files.delete(path);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to delete image: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete image: " + e.getMessage());
         }
     }
 }

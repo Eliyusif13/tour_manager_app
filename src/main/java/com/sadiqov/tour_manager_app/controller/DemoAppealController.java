@@ -5,6 +5,7 @@ import com.sadiqov.tour_manager_app.dto.response.DemoAppealResponse;
 import com.sadiqov.tour_manager_app.service.DemoAppealService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,23 +29,24 @@ public class DemoAppealController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createDemoAppeal(
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> createDemoAppeal(
             @Valid @RequestBody DemoAppealRequest request) {
         demoAppealService.createDemoAppeal(request);
-        return ResponseEntity.ok(Map.of("message", "Demo request successfully created"));
+        return Map.of("message", "Demo request successfully created");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> updateDemoAppeal(
+    public Map<String, String> updateDemoAppeal(
             @PathVariable Long id,
             @Valid @RequestBody DemoAppealRequest request) {
         demoAppealService.updateDemoAppeal(id, request);
-        return ResponseEntity.ok(Map.of("message", "Demo appeal successfully updated"));
+        return Map.of("message", "Demo appeal successfully updated");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> deleteDemoAppeal(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDemoAppeal(@PathVariable Long id) {
         demoAppealService.deleteDemoAppeal(id);
-        return ResponseEntity.ok(Map.of("message", "Demo appeal successfully deleted"));
     }
 }

@@ -5,6 +5,7 @@ import com.sadiqov.tour_manager_app.dto.response.FAQResponse;
 import com.sadiqov.tour_manager_app.service.FAQService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,22 +32,23 @@ public class FAQController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createFAQ(@Valid @RequestBody FAQRequest request) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> createFAQ(@Valid @RequestBody FAQRequest request) {
         faqService.createFAQ(request);
-        return ResponseEntity.ok(Map.of("message", "FAQ successfully created"));
+        return Map.of("message", "FAQ successfully created");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> updateFAQ(
+    public Map<String, String> updateFAQ(
             @PathVariable Long id,
             @Valid @RequestBody FAQRequest request) {
         faqService.updateFAQ(id, request);
-        return ResponseEntity.ok(Map.of("message", "FAQ successfully updated"));
+        return Map.of("message", "FAQ successfully updated");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> deleteFAQ(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFAQ(@PathVariable Long id) {
         faqService.deleteFAQ(id);
-        return ResponseEntity.ok(Map.of("message", "FAQ successfully deleted"));
     }
 }

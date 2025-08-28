@@ -6,7 +6,10 @@ import com.sadiqov.tour_manager_app.entity.faq_entity.FAQ;
 import com.sadiqov.tour_manager_app.mapper.FAQMapper;
 import com.sadiqov.tour_manager_app.repository.FAQRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,15 +29,16 @@ public class FAQService {
                 .map(faq -> faqMapper.toResponse(faq, lang));
     }
 
+    @Transactional
     public void createFAQ(FAQRequest request) {
         FAQ faq = faqMapper.toEntity(request);
-        FAQ savedFAQ = faqRepository.save(faq);
-        faqMapper.toResponse(savedFAQ, "az");
+        faqRepository.save(faq);
     }
 
+    @Transactional
     public void updateFAQ(Long id, FAQRequest request) {
         FAQ existingFAQ = faqRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("FAQ not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "FAQ not found with id: " + id));
 
         existingFAQ.setQuestionAz(request.questionAz());
         existingFAQ.setQuestionRu(request.questionRu());
@@ -43,13 +47,13 @@ public class FAQService {
         existingFAQ.setAnswerRu(request.answerRu());
         existingFAQ.setAnswerEn(request.answerEn());
 
-        FAQ updatedFAQ = faqRepository.save(existingFAQ);
-        faqMapper.toResponse(updatedFAQ, "az");
+        faqRepository.save(existingFAQ);
     }
 
+    @Transactional
     public void deleteFAQ(Long id) {
         if (!faqRepository.existsById(id)) {
-            throw new RuntimeException("FAQ not found with id: " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "FAQ not found with id: " + id);
         }
         faqRepository.deleteById(id);
     }

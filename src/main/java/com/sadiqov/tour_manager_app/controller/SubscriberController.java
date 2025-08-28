@@ -5,6 +5,7 @@ import com.sadiqov.tour_manager_app.dto.response.SubscriberResponse;
 import com.sadiqov.tour_manager_app.service.SubscriberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,21 +30,22 @@ public class SubscriberController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createSubscriber(@Valid @RequestBody SubscriberRequest request) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> createSubscriber(@Valid @RequestBody SubscriberRequest request) {
         subscriberService.createSubscriber(request);
-        return ResponseEntity.ok(Map.of("message", "Subscriber successfully created"));
+        return Map.of("message", "Subscriber successfully created");
     }
 
     @PatchMapping("/{id}/deactivate")
-    public ResponseEntity<Map<String, String>> deactivateSubscriber(@PathVariable Long id) {
+    public Map<String, String> deactivateSubscriber(@PathVariable Long id) {
         subscriberService.deactivateSubscriber(id);
-        return ResponseEntity.ok(Map.of("message", "Subscriber successfully deactivated"));
+        return Map.of("message", "Subscriber successfully deactivated");
     }
 
     @PatchMapping("/{id}/activate")
-    public ResponseEntity<Map<String, String>> activateSubscriber(@PathVariable Long id) {
+    public Map<String, String> activateSubscriber(@PathVariable Long id) {
         subscriberService.activateSubscriber(id);
-        return ResponseEntity.ok(Map.of("message", "Subscriber successfully activated"));
+        return Map.of("message", "Subscriber successfully activated");
     }
 
     @GetMapping("/count/active")

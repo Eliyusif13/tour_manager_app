@@ -36,34 +36,30 @@ public class ContactUsController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createContactRequest(@Valid @RequestBody ContactUsRequest request) {
-        try {
-            contactUsService.createContactRequest(request);
-            return ResponseEntity.ok(Map.of("message", "Contact request successfully created"));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("error", e.getMessage()));
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> createContactRequest(@Valid @RequestBody ContactUsRequest request) {
+        contactUsService.createContactRequest(request);
+        return Map.of("message", "Contact request successfully created");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> updateContactRequest(
+    public Map<String, String> updateContactRequest(
             @PathVariable Long id,
             @Valid @RequestBody ContactUsUpdateRequest request) {
         contactUsService.updateContactRequest(id, request);
-        return ResponseEntity.ok(Map.of("message", "Contact request successfully updated"));
+        return Map.of("message", "Contact request successfully updated");
     }
 
     @PatchMapping("/{id}/mark-responded")
-    public ResponseEntity<Map<String, String>> markAsResponded(@PathVariable Long id) {
+    public Map<String, String> markAsResponded(@PathVariable Long id) {
         contactUsService.markAsResponded(id);
-        return ResponseEntity.ok(Map.of("message", "Contact request successfully marked as responded"));
+        return Map.of("message", "Contact request successfully marked as responded");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> deleteContactRequest(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteContactRequest(@PathVariable Long id) {
         contactUsService.deleteContactRequest(id);
-        return ResponseEntity.ok(Map.of("message", "Contact request successfully deleted"));
     }
 
     @GetMapping("/count/unresponded")

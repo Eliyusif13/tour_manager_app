@@ -10,8 +10,11 @@ import com.sadiqov.tour_manager_app.mapper.DemoAppealMapper;
 import com.sadiqov.tour_manager_app.repository.DemoAppealRepository;
 import com.sadiqov.tour_manager_app.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 @Service
@@ -41,13 +44,13 @@ public class DemoAppealService {
             demoAppeal.setAddress(address);
         }
 
-        demoAppealMapper.toResponse(demoAppealRepository.save(demoAppeal));
+        demoAppealRepository.save(demoAppeal);
     }
 
     @Transactional
     public void updateDemoAppeal(Long id, DemoAppealRequest request) {
         DemoAppeal demoAppeal = demoAppealRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Demo appeal not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Demo appeal not found"));
 
         demoAppeal.setFullName(request.fullName());
         demoAppeal.setEmail(request.email());
@@ -85,13 +88,13 @@ public class DemoAppealService {
             }
         }
 
-        demoAppealMapper.toResponse(demoAppealRepository.save(demoAppeal));
+        demoAppealRepository.save(demoAppeal);
     }
 
     @Transactional
     public void deleteDemoAppeal(Long id) {
         DemoAppeal demoAppeal = demoAppealRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Demo appeal not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Demo appeal not found"));
 
         demoAppeal.getPhoneNumbers().clear();
         demoAppealRepository.delete(demoAppeal);
@@ -99,7 +102,7 @@ public class DemoAppealService {
 
     public DemoAppealResponse getDemoAppealById(Long id) {
         DemoAppeal demoAppeal = demoAppealRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Demo appeal not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Demo appeal not found"));
         return demoAppealMapper.toResponse(demoAppeal);
     }
 

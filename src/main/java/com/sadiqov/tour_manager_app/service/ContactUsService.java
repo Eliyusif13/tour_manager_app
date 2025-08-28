@@ -8,8 +8,10 @@ import com.sadiqov.tour_manager_app.mapper.ContactUsMapper;
 import com.sadiqov.tour_manager_app.repository.ContactUsRepository;
 import com.sadiqov.tour_manager_app.repository.SubscriberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,11 +23,6 @@ public class ContactUsService {
     private final ContactUsRepository contactUsRepository;
     private final ContactUsMapper contactUsMapper;
     private final SubscriberRepository subscriberRepository;
-
-    private boolean hasRecentDuplicateRequest(String email) {
-        LocalDateTime twentyFourHoursAgo = LocalDateTime.now().minusHours(24);
-        return contactUsRepository.existsByEmailAndCreatedAtAfter(email, twentyFourHoursAgo);
-    }
 
     public List<ContactUsResponse> getAllContactRequests() {
         return contactUsMapper.toResponseList(contactUsRepository.findAll());
@@ -40,31 +37,37 @@ public class ContactUsService {
                 .map(contactUsMapper::toResponse);
     }
 
+    @Transactional
     public void createContactRequest(ContactUsRequest request) {
         validateSubscription(request.email());
         checkForDuplicateRequests(request.email());
 
         ContactUs contactUs = contactUsMapper.toEntity(request);
-        contactUsMapper.toResponse(contactUsRepository.save(contactUs));
+        contactUsRepository.save(contactUs);
     }
 
     @Transactional
     public void updateContactRequest(Long id, ContactUsUpdateRequest request) {
         ContactUs contactUs = contactUsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contact request not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact request not found"));
 
         contactUsMapper.updateEntityFromRequest(request, contactUs);
-        contactUsMapper.toResponse(contactUsRepository.save(contactUs));
+        contactUsRepository.save(contactUs);
     }
 
+    @Transactional
     public void markAsResponded(Long id) {
         ContactUs contactUs = contactUsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contact request not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact request not found"));
         contactUs.setIsResponded(true);
         contactUsRepository.save(contactUs);
     }
 
+    @Transactional
     public void deleteContactRequest(Long id) {
+        if (!contactUsRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact request not found");
+        }
         contactUsRepository.deleteById(id);
     }
 
@@ -76,11 +79,13 @@ public class ContactUsService {
         Optional<Subscriber> subscriber = subscriberRepository.findByEmail(email);
 
         if (subscriber.isEmpty()) {
-            throw new RuntimeException("Bu email ilə abunəliyiniz yoxdur. Zəhmət olmasa əvvəlcə abunə olun.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Bu email ilə abunəliyiniz yoxdur. Zəhmət olmasa əvvəlcə abunə olun.");
         }
 
         if (!subscriber.get().getIsActive()) {
-            throw new RuntimeException("Abunəliyiniz aktiv deyil. Zəhmət olmasa abunəliyi aktivləşdirin.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Abunəliyiniz aktiv deyil. Zəhmət olmasa abunəliyi aktivləşdirin.");
         }
     }
 
@@ -89,7 +94,8 @@ public class ContactUsService {
         boolean hasRecentRequest = contactUsRepository.existsByEmailAndCreatedAtAfter(email, twentyFourHoursAgo);
 
         if (hasRecentRequest) {
-            throw new RuntimeException("Bu email ilə son 24 saatda artıq müraciət göndərilib. Zəhmət olmasa bir qədər gözləyin.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Bu email ilə son 24 saatda artıq müraciət göndərilib. Zəhmət olmasa bir qədər gözləyin.");
         }
     }
 }

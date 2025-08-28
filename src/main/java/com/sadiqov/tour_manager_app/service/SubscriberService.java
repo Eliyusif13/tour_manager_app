@@ -6,7 +6,10 @@ import com.sadiqov.tour_manager_app.entity.home_page.Subscriber;
 import com.sadiqov.tour_manager_app.mapper.SubscriberMapper;
 import com.sadiqov.tour_manager_app.repository.SubscriberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,26 +29,28 @@ public class SubscriberService {
                 .map(subscriberMapper::toResponse);
     }
 
+    @Transactional
     public void createSubscriber(SubscriberRequest request) {
         if (subscriberRepository.existsByEmail(request.email())) {
-            throw new RuntimeException("Email already exists");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
         }
 
         Subscriber subscriber = subscriberMapper.toEntity(request);
-        Subscriber savedSubscriber = subscriberRepository.save(subscriber);
-        subscriberMapper.toResponse(savedSubscriber);
+        subscriberRepository.save(subscriber);
     }
 
+    @Transactional
     public void deactivateSubscriber(Long id) {
         Subscriber subscriber = subscriberRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Subscriber not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subscriber not found"));
         subscriber.setIsActive(false);
         subscriberRepository.save(subscriber);
     }
 
+    @Transactional
     public void activateSubscriber(Long id) {
         Subscriber subscriber = subscriberRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Subscriber not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subscriber not found"));
         subscriber.setIsActive(true);
         subscriberRepository.save(subscriber);
     }

@@ -5,6 +5,7 @@ import com.sadiqov.tour_manager_app.dto.response.FeatureResponse;
 import com.sadiqov.tour_manager_app.service.FeatureService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,22 +31,23 @@ public class FeatureController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createFeature(@Valid @RequestBody FeatureRequest request) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> createFeature(@Valid @RequestBody FeatureRequest request) {
         featureService.createFeature(request);
-        return ResponseEntity.ok(Map.of("message", "Feature successfully created"));
+        return Map.of("message", "Feature successfully created");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> updateFeature(
+    public Map<String, String> updateFeature(
             @PathVariable Long id,
             @Valid @RequestBody FeatureRequest request) {
         featureService.updateFeature(id, request);
-        return ResponseEntity.ok(Map.of("message", "Feature successfully updated"));
+        return Map.of("message", "Feature successfully updated");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> deleteFeature(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFeature(@PathVariable Long id) {
         featureService.deleteFeature(id);
-        return ResponseEntity.ok(Map.of("message", "Feature successfully deleted"));
     }
 }
