@@ -1,12 +1,10 @@
-package com.sadiqov.tour_manager_app.controller;
+package com.sadiqov.tour_manager_app.controller.admin;
 
-import com.sadiqov.tour_manager_app.dto.request.ContactUsRequest;
-import com.sadiqov.tour_manager_app.dto.response.ContactUsResponse;
 import com.sadiqov.tour_manager_app.dto.request.ContactUsUpdateRequest;
+import com.sadiqov.tour_manager_app.dto.response.ContactUsResponse;
 import com.sadiqov.tour_manager_app.service.ContactUsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/contact-requests")
+@RequestMapping("/api/admin/contact-requests")
 @RequiredArgsConstructor
-public class ContactUsController {
+public class AdminContactUsController {
     private final ContactUsService contactUsService;
 
     @GetMapping
@@ -35,28 +33,24 @@ public class ContactUsController {
                 .orElseThrow(() -> new RuntimeException("Contact request not found")));
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createContactRequest(@Valid @RequestBody ContactUsRequest request) {
-        contactUsService.createContactRequest(request);
-    }
-
     @PutMapping("/{id}")
-    public void updateContactRequest(
+    public Map<String, String> updateContactRequest(
             @PathVariable Long id,
             @Valid @RequestBody ContactUsUpdateRequest request) {
         contactUsService.updateContactRequest(id, request);
+        return Map.of("message", "Contact request successfully updated");
     }
 
     @PatchMapping("/{id}/mark-responded")
-    public void markAsResponded(@PathVariable Long id) {
+    public Map<String, String> markAsResponded(@PathVariable Long id) {
         contactUsService.markAsResponded(id);
+        return Map.of("message", "Contact request successfully marked as responded");
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteContactRequest(@PathVariable Long id) {
+    public Map<String, String> deleteContactRequest(@PathVariable Long id) {
         contactUsService.deleteContactRequest(id);
+        return Map.of("message", "Contact request successfully deleted");
     }
 
     @GetMapping("/count/unresponded")

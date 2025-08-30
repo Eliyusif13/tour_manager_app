@@ -1,4 +1,4 @@
-package com.sadiqov.tour_manager_app.controller;
+package com.sadiqov.tour_manager_app.controller.admin;
 
 import com.sadiqov.tour_manager_app.dto.request.FeatureRequest;
 import com.sadiqov.tour_manager_app.dto.response.FeatureResponse;
@@ -8,38 +8,40 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/features")
+@RequestMapping("/api/admin/features")
 @RequiredArgsConstructor
-public class FeatureController {
+public class AdminFeatureController {
     private final FeatureService featureService;
 
-    @GetMapping("/{lang}")
-    public ResponseEntity<List<FeatureResponse>> getAllFeatures(@PathVariable String lang) {
-        return ResponseEntity.ok(featureService.getAllFeatures(lang));
+    @GetMapping
+    public ResponseEntity<List<FeatureResponse>> getAllFeatures() {
+        return ResponseEntity.ok(featureService.getAllFeatures("az")); // Default language
     }
 
-    @GetMapping("/{lang}/{id}")
-    public ResponseEntity<FeatureResponse> getFeatureById(
-            @PathVariable String lang,
-            @PathVariable Long id) {
-        return ResponseEntity.ok(featureService.getFeatureById(id, lang));
+    @GetMapping("/{id}")
+    public ResponseEntity<FeatureResponse> getFeatureById(@PathVariable Long id) {
+        return ResponseEntity.ok(featureService.getFeatureById(id, "az"));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createFeature(@Valid @RequestBody FeatureRequest request) {
+    public Map<String, String> createFeature(@Valid @RequestBody FeatureRequest request) {
         featureService.createFeature(request);
-      }
+        return Map.of("message", "Feature successfully created");
+    }
 
     @PutMapping("/{id}")
-    public void updateFeature(
+    public Map<String, String> updateFeature(
             @PathVariable Long id,
             @Valid @RequestBody FeatureRequest request) {
         featureService.updateFeature(id, request);
-      }
+        return Map.of("message", "Feature successfully updated");
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

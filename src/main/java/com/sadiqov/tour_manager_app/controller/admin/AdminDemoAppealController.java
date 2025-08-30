@@ -1,4 +1,4 @@
-package com.sadiqov.tour_manager_app.controller;
+package com.sadiqov.tour_manager_app.controller.admin;
 
 import com.sadiqov.tour_manager_app.dto.request.DemoAppealRequest;
 import com.sadiqov.tour_manager_app.dto.response.DemoAppealResponse;
@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/demo-appeals")
+@RequestMapping("/api/admin/demo-appeals")
 @RequiredArgsConstructor
-public class DemoAppealController {
+public class AdminDemoAppealController {
     private final DemoAppealService demoAppealService;
 
     @GetMapping
@@ -30,16 +30,18 @@ public class DemoAppealController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createDemoAppeal(
+    public Map<String, String> createDemoAppeal(
             @Valid @RequestBody DemoAppealRequest request) {
         demoAppealService.createDemoAppeal(request);
+        return Map.of("message", "Demo request successfully created");
     }
 
     @PutMapping("/{id}")
-    public void updateDemoAppeal(
+    public Map<String, String> updateDemoAppeal(
             @PathVariable Long id,
             @Valid @RequestBody DemoAppealRequest request) {
         demoAppealService.updateDemoAppeal(id, request);
+        return Map.of("message", "Demo appeal successfully updated");
     }
 
     @DeleteMapping("/{id}")
