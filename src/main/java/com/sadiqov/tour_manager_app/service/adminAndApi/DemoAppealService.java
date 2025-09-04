@@ -1,4 +1,4 @@
-package com.sadiqov.tour_manager_app.service;
+package com.sadiqov.tour_manager_app.service.adminAndApi;
 
 import com.sadiqov.tour_manager_app.dto.request.DemoAppealRequest;
 import com.sadiqov.tour_manager_app.dto.response.DemoAppealResponse;

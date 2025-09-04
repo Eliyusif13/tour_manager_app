@@ -6,7 +6,6 @@ document.getElementById('demoAppealForm').addEventListener('submit', async funct
     const formData = {
         fullName: document.getElementById('fullName').value,
         email: document.getElementById('email').value,
-
         phoneNumber: "0" + document.getElementById('phone').value,
         companyName: document.getElementById('companyName').value,
         message: document.getElementById('message').value
@@ -17,7 +16,7 @@ document.getElementById('demoAppealForm').addEventListener('submit', async funct
         return;
     }
 
-    const phoneRegex = /^\+0(50|51|55|70|77|99|10)\d{7}$/;
+    const phoneRegex = /^0(50|51|55|70|77|99|10)\d{7}$/;
     if (!phoneRegex.test(formData.phoneNumber)) {
         showAlert('Please enter a valid Azerbaijani phone number', 'error');
         return;
@@ -32,7 +31,7 @@ document.getElementById('demoAppealForm').addEventListener('submit', async funct
 
     try {
         // API-ə POST sorğusu göndərmək
-        const response = await fetch('http://localhost:8080/api/demo-appeals', {
+        const response = await fetch('http://localhost:8080/api/public/demo-appeals', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -60,7 +59,7 @@ document.getElementById('demoAppealForm').addEventListener('submit', async funct
         }
     } catch (error) {
         showAlert('Error: ' + error.message, 'error');
-        // Demo məqsədli: Əgər backend əlaqəsi yoxdursa, success səhifəsini göstər
+        // Demo məqsədi: Əgər backend əlaqəsi yoxdursa, success səhifəsini göstər
         showSuccessPage();
     }
 });
@@ -96,9 +95,11 @@ document.getElementById('phone').addEventListener('input', function(e) {
         this.value = this.value.slice(0, 9);
     }
 });
+
+// FAQ butonu
 document.getElementById('faqButton').addEventListener('click', function() {
     showFAQPage();
-    loadFAQs('az'); // Default olaraq Azərbaycan dili
+    loadFAQs(); // Header ilə dil göndərilir
 });
 
 function showFAQPage() {
@@ -107,21 +108,75 @@ function showFAQPage() {
     document.getElementById('faq-container').style.display = 'flex';
 }
 
-async function loadFAQs(lang) {
+// FAQ-ları yükləmək - İNDİ HEADER İLƏ DİL GÖNDƏRİLİR
+async function loadFAQs() {
     const faqList = document.getElementById('faqList');
     faqList.innerHTML = '<div class="faq-loading">Sual və cavablar yüklənir...</div>';
 
     try {
-        const response = await fetch(`http://localhost:8080/api/faqs/${lang}`);
+        console.log('FAQ-lar database-dən yüklənir...');
+
+        // DÜZƏLDİ: Header ilə dil göndərilir
+        const response = await fetch('http://localhost:8080/api/public/faqs', {
+            method: 'GET',
+            headers: {
+                'Accept-Language': 'az', // Azərbaycan dili
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log('Response status:', response.status);
+
         if (response.ok) {
             const faqs = await response.json();
+            console.log('Database-dən FAQ-lar alındı:', faqs);
             displayFAQs(faqs);
         } else {
+            console.error('Xəta statusu:', response.status);
+            const errorText = await response.text();
+            console.error('Xəta mətni:', errorText);
             faqList.innerHTML = '<div class="faq-loading">Xəta baş verdi. Zəhmət olmasa sonra yenidən cəhd edin.</div>';
         }
     } catch (error) {
         console.error('FAQ yüklənərkən xəta:', error);
-        displaySampleFAQs();
+        // Xəta halında belə database-ə cəhd et
+        try {
+            await loadFAQsWithQueryParam(); // Query param ilə cəhd edək
+        } catch (fallbackError) {
+            console.error('Fallback də xəta:', fallbackError);
+            faqList.innerHTML = `
+                <div class="faq-loading">
+                    <p>Xəta baş verdi: ${fallbackError.message}</p>
+                    <p>Zəhmət olmasa backend serverin işlədiyindən əmin olun.</p>
+                </div>
+            `;
+        }
+    }
+}
+
+// Əlavə: Query param ilə cəhd etmək
+async function loadFAQsWithQueryParam() {
+    const faqList = document.getElementById('faqList');
+
+    try {
+        console.log('Query param ilə FAQ-lar yüklənir...');
+
+        const response = await fetch('http://localhost:8080/api/public/faqs/az', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const faqs = await response.json();
+            console.log('Query param ilə FAQ-lar alındı:', faqs);
+            displayFAQs(faqs);
+        } else {
+            throw new Error(`HTTP xəta: ${response.status}`);
+        }
+    } catch (error) {
+        throw error;
     }
 }
 
@@ -129,56 +184,22 @@ async function loadFAQs(lang) {
 function displayFAQs(faqs) {
     const faqList = document.getElementById('faqList');
 
-    if (faqs.length === 0) {
+    if (!faqs || faqs.length === 0) {
         faqList.innerHTML = '<div class="faq-loading">Hələlik heç bir sual-cavab yoxdur.</div>';
         return;
     }
 
     let html = '';
-    faqs.forEach(faq => {
+    faqs.forEach((faq, index) => {
         html += `
             <div class="faq-item">
                 <div class="faq-question" onclick="toggleFAQ(this)">
-                    ${faq.question}
+                    <span style="font-weight: bold; margin-right: 8px;">${index + 1}.</span>
+                    ${faq.question || 'Sual'}
                     <span class="faq-icon">▼</span>
                 </div>
                 <div class="faq-answer">
-                    ${faq.answer}
-                </div>
-            </div>
-        `;
-    });
-
-    faqList.innerHTML = html;
-}
-
-function displaySampleFAQs() {
-    const faqList = document.getElementById('faqList');
-    const sampleFAQs = [
-        {
-            question: "Sizə necə müraciət edə bilərəm?",
-            answer: "Bizimlə email və ya telefon vasitəsilə əlaqə saxlaya bilərsiniz."
-        },
-        {
-            question: "Turun qiymətinə nə daxildir?",
-            answer: "Turun qiymətinə yaşayış, nəqliyyat və bələdçi xidməti daxildir."
-        },
-        {
-            question: "Ödənişi necə edə bilərəm?",
-            answer: "Ödənişi kartla, nağd və ya bank köçürməsi ilə edə bilərsiniz."
-        }
-    ];
-
-    let html = '';
-    sampleFAQs.forEach(faq => {
-        html += `
-            <div class="faq-item">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    ${faq.question}
-                    <span class="faq-icon">▼</span>
-                </div>
-                <div class="faq-answer">
-                    ${faq.answer}
+                    ${faq.answer || 'Cavab'}
                 </div>
             </div>
         `;
@@ -209,20 +230,33 @@ function goBackFromFaq() {
 
 // Səhifə yükləndikdə feature-ləri götür
 document.addEventListener('DOMContentLoaded', function() {
-    loadFeatures('az'); // Default olaraq Azərbaycan dili
+    loadFeatures(); // Default olaraq Azərbaycan dili
 });
 
 // Feature-ləri yükləmək
-async function loadFeatures(lang) {
+async function loadFeatures() {
     const featuresGrid = document.getElementById('featuresGrid');
     featuresGrid.innerHTML = '<div class="feature-loading">Xüsusiyyətlər yüklənir...</div>';
 
     try {
-        const response = await fetch(`http://localhost:8080/api/features/${lang}`);
+        console.log('Feature-lər database-dən yüklənir...');
+
+        const response = await fetch('http://localhost:8080/api/public/features', {
+            method: 'GET',
+            headers: {
+                'Accept-Language': 'az', // Azərbaycan dili
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log('Features response status:', response.status);
+
         if (response.ok) {
             const features = await response.json();
+            console.log('Database-dən feature-lər alındı:', features);
             displayFeatures(features);
         } else {
+            console.error('Features xəta statusu:', response.status);
             displaySampleFeatures();
         }
     } catch (error) {
@@ -234,7 +268,7 @@ async function loadFeatures(lang) {
 function displayFeatures(features) {
     const featuresGrid = document.getElementById('featuresGrid');
 
-    if (features.length === 0) {
+    if (!features || features.length === 0) {
         featuresGrid.innerHTML = '<div class="feature-loading">Hələlik heç bir xüsusiyyət yoxdur.</div>';
         return;
     }
@@ -251,8 +285,8 @@ function displayFeatures(features) {
                 ` : `
                     <div class="feature-icon">⭐</div>
                 `}
-                <h3 class="feature-title">${feature.title}</h3>
-                <p class="feature-text">${feature.text}</p>
+                <h3 class="feature-title">${feature.title || 'Xüsusiyyət'}</h3>
+                <p class="feature-text">${feature.text || 'Təsvir'}</p>
             </div>
         `;
     });
@@ -281,7 +315,7 @@ function displaySampleFeatures() {
     sampleFeatures.forEach(feature => {
         html += `
             <div class="feature-card">
-                <div class="feature-icon">🚀</div>
+                <div class="feature-icon">⭐</div>
                 <h3 class="feature-title">${feature.title}</h3>
                 <p class="feature-text">${feature.text}</p>
             </div>
@@ -290,4 +324,3 @@ function displaySampleFeatures() {
 
     featuresGrid.innerHTML = html;
 }
-

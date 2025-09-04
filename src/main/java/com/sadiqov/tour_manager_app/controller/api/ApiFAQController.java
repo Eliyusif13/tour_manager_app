@@ -1,7 +1,7 @@
 package com.sadiqov.tour_manager_app.controller.api;
 
 import com.sadiqov.tour_manager_app.dto.response.FAQResponse;
-import com.sadiqov.tour_manager_app.service.FAQService;
+import com.sadiqov.tour_manager_app.service.adminAndApi.FAQService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

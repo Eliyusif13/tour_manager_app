@@ -2,7 +2,7 @@ package com.sadiqov.tour_manager_app.controller.admin;
 
 import com.sadiqov.tour_manager_app.dto.request.FAQRequest;
 import com.sadiqov.tour_manager_app.dto.response.FAQResponse;
-import com.sadiqov.tour_manager_app.service.FAQService;
+import com.sadiqov.tour_manager_app.service.adminAndApi.FAQService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

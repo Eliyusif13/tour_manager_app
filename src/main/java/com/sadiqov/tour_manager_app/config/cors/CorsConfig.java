@@ -1,4 +1,4 @@
-package com.sadiqov.tour_manager_app.config;
+package com.sadiqov.tour_manager_app.config.cors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

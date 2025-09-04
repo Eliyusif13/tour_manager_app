@@ -454,11 +454,6 @@ textarea {
     }
 }
 /* FEATURE SECTION STYLES */
-.features-section {
-    padding: 3rem 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
 
 .features-grid {
     display: grid;
@@ -487,15 +482,25 @@ textarea {
     margin-bottom: 1rem;
 }
 
+.features-section {
+    padding: 2rem 0;
+    background: transparent !important; /* Arxaplanı şəffaf et */
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 1rem 0;
+}
+
 .feature-title {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+    color: white !important;
+    font-size: 1.2rem !important;
 }
 
 .feature-text {
-    opacity: 0.9;
-    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9) !important;
 }
 
 

@@ -1,7 +1,7 @@
 package com.sadiqov.tour_manager_app.controller.admin;
 
 import com.sadiqov.tour_manager_app.dto.response.SubscriberResponse;
-import com.sadiqov.tour_manager_app.service.SubscriberService;
+import com.sadiqov.tour_manager_app.service.adminAndApi.SubscriberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
